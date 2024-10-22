@@ -1,8 +1,8 @@
 import '@/styles/globals.css'
 
 export const metadata = {
-  title: 'Breadit',
-  description: 'A Reddit clone built with Next.js and TypeScript.',
+  title: 'Debatable',
+  description: "Because everything is 'Debatable'—A social media platform designed for debaters and thinkers alike. ",
 }
 
 export default function RootLayout({
