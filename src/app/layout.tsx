@@ -3,6 +3,7 @@ import '@/styles/globals.css'
 import { Inter } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import { Toaster } from '@/components/ui/Toaster'
+import Providers from '@/components/Providers'
 
 export const metadata = {
   title: 'Debatable',
@@ -25,6 +26,7 @@ export default function RootLayout({
         inter.className
       )}>
       <body className='min-h-screen bg-slate-50 antialiased'>
+        <Providers >
         <div className="relative">
           {/* @ts-expect-error server component */}
           <Navbar />
@@ -35,6 +37,7 @@ export default function RootLayout({
           </div>
         </div>
         <Toaster />
+        </Providers>
       </body>
     </html>
   )
