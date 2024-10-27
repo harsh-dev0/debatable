@@ -5,7 +5,7 @@ export const subdebatableValidator = z.object({
 })
 
 export const subdebatableSubscriptionValidator = z.object({
-    name: z.string(),
+    subdebatableId: z.string(),
 })
 
 export type CreateSubdebatablePayload = z.infer<typeof subdebatableValidator>
