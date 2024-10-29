@@ -53,7 +53,7 @@ model User {
   Post                Post[]
   Comment             Comment[]
   CommentVote         CommentVote[]
-  Subdebatable            Subdebatable[]
+  Subdebatable        Subdebatable[]
 }
 
 model Subdebatable {
@@ -68,7 +68,6 @@ model Subdebatable {
   subscribers Subscription[]
   User        User?          @relation(fields: [userId], references: [id])
   userId      String?
-  
 
   @@index([name])
 }
@@ -83,12 +82,12 @@ model Subscription {
 }
 
 model Post {
-  id             String        @id @default(cuid())
+  id             String       @id @default(cuid())
   title          String
   content        Json
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  subdebatable   Subdebatable? @relation(fields: [subdebatableId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  subdebatable   Subdebatable @relation(fields: [subdebatableId], references: [id])
   subdebatableId String
 
   author   User   @relation(fields: [authorId], references: [id])
