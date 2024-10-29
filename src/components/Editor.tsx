@@ -8,11 +8,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type EditorJS from '@editorjs/editorjs'
 import { uploadFiles } from '@/lib/uploadthing'
 import { usePathname, useRouter } from 'next/navigation'
+import { toast } from '@/hooks/use-toast'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 
 interface EditorProps {
     subdebatableId: string
 }
-
 
 const Editor: FC<EditorProps> = ({ subdebatableId }) => {
     const {
@@ -27,19 +29,13 @@ const Editor: FC<EditorProps> = ({ subdebatableId }) => {
             content: null,
         }
     })
+
     const ref = useRef<EditorJS>()
     const _titleRef = useRef<HTMLTextAreaElement>(null)
     const router = useRouter()
     const [isMounted, setIsMounted] = useState<boolean>(false)
     const pathname = usePathname()
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setIsMounted(true)
-        }
-
-
-    }, []);
     const intializeEditor = useCallback(async () => {
         const EditorJS = (await import('@editorjs/editorjs')).default
         const Header = (await import('@editorjs/header')).default
@@ -73,10 +69,7 @@ const Editor: FC<EditorProps> = ({ subdebatableId }) => {
                         config: {
                             uploader: {
                                 async uploadByFile(file: File) {
-                                    // upload to uploadthing
-                                    const [res] = await uploadFiles("imageUploader", {
-                                        files: [file],
-                                      });
+                                    const [res] = await uploadFiles("imageUploader", { files: [file] })
 
                                     return {
                                         success: 1,
@@ -97,38 +90,91 @@ const Editor: FC<EditorProps> = ({ subdebatableId }) => {
             })
         }
     }, [])
-    useEffect(() => {
 
-        const init = async () => {
-            await intializeEditor()
-
-            setTimeout(() => {
-                //setfocustotitle
+    const { mutate: createPost } = useMutation({
+        mutationFn: async ({ title, content, subdebatableId }: PostCreationRequest) => {
+            const payload: PostCreationRequest = { subdebatableId, title, content }
+            const { data } = await axios.post('/api/subdebatable/post/create', payload)
+            return data
+        },
+        onError: () => {
+            toast({
+                title: 'Something Went Wrong',
+                description: 'Your opinion was not published, please try again later',
+                variant: 'destructive'
+            })
+        },
+        onSuccess: () => {
+            const newpathname = pathname.split('/').slice(0, -1).join('/')
+            router.push(newpathname)
+            router.refresh()
+            toast({
+                description: 'Your opinion was voiced!!!'
             })
         }
+    })
 
-        if(isMounted){
-            init()
+    useEffect(() => {
+        if (typeof window !== 'undefined') setIsMounted(true)
+    }, [])
 
-            return () => {}
+    useEffect(() => {
+        if (Object.keys(errors).length) {
+            Object.values(errors).forEach((value) =>
+                toast({
+                    title: 'Something Went Wrong',
+                    description: (value as { message: string }).message,
+                    variant: 'destructive'
+                })
+            )
+        }
+    }, [errors])
+
+    useEffect(() => {
+        const init = async () => {
+            await intializeEditor()
+            setTimeout(() => _titleRef.current?.focus(), 0)
         }
 
-    }, [isMounted, intializeEditor]);
+        if (isMounted) {
+            init()
+            return () => {
+                ref.current?.destroy()
+                ref.current = undefined
+            }
+        }
+    }, [isMounted, intializeEditor])
+
+    async function onSubmit(data: PostCreationRequest) {
+        const blocks = await ref.current?.save()
+        const payload: PostCreationRequest = {
+            title: data.title,
+            content: blocks,
+            subdebatableId
+        }
+        createPost(payload)
+    }
+
+    const { ref: titleRef, ...rest } = register('title')
+
     return (
-        <div className='w-full p-4 bg-zinc-50 rounded-lg border border-zinc-200'>Editor
-            <form
-                id='subreddit-post-form'
-                onSubmit={() => { }}>
+        <div className='w-full p-4 bg-zinc-50 rounded-lg border border-zinc-200'>
+            <form id='subdebatable-post-form' onSubmit={handleSubmit(onSubmit)}>
                 <div className='prose prose-stone dark:prose-invert'>
                     <TextareaAutosize
-                        
+                        ref={(e) => {
+                            titleRef(e)
+                            //@ts-ignore
+                            _titleRef.current = e
+                        }}
+                        {...rest}
                         placeholder='Title'
                         className='w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none'
-                    /></div>
-        <div id='editor' className='min-h-[500px]'/>
+                    />
+                </div>
+                <div id='editor' className='min-h-[500px]' />
             </form>
         </div>
-
     )
 }
 
