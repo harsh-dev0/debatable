@@ -6,6 +6,7 @@ import { Post, User, Vote } from '@prisma/client'
 import Link from 'next/link'
 import { MessageSquare } from 'lucide-react'
 import EditorOutput from './EditorOutput'
+import PostVoteClient from './post-vote/PostVoteClient'
 
 type PartialVote = Pick<Vote, 'type'>
 interface PostProps {
@@ -31,6 +32,10 @@ const Post: FC<PostProps> = ({
         <div className='rounded-md bg-white shadow'>
             <div className='px-6 py-4 flex justify-between'>
                 {/* Todo Postvotes */}
+                <PostVoteClient
+                    postId={post.id}
+                    initialVotesAmt={_votesAmt}
+                    initialVote={_currentVote?.type} />
                 <div className="w-0 flex-1">
                     <div className="max-w-40 mt-1 text-xs text-gray-500">
                         {subdebatableName ? (
