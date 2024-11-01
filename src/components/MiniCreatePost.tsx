@@ -19,7 +19,7 @@ const MiniCreatePost: FC<MiniCreatePostProps> = ({ session }) => {
 
 
     return (
-    <li className="overflow-hidden rounded-md bg-white shadow">
+    <ul className="overflow-hidden rounded-md bg-white shadow">
         <div className="h-full px-6 py-4 flex justify-between gap-6">
         <div className='relative'>
           <UserAvatar
@@ -46,7 +46,7 @@ const MiniCreatePost: FC<MiniCreatePostProps> = ({ session }) => {
           <Link2 className='text-zinc-600' />
         </Button>
         </div>
-    </li>
+    </ul>
     )
 }
 
