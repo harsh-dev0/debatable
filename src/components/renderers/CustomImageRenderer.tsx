@@ -4,7 +4,6 @@ import Image from 'next/image'
 
 function CustomImageRenderer({ data }: any) {
   const src = data.file.url
-console.log(src);
 
   return (
     <div className='relative w-full min-h-[15rem]'>
