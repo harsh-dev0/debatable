@@ -1,31 +1,31 @@
-import CommentsSection from "@/components/CommentsSection";
-import EditorOutput from "@/components/EditorOutput";
-import PostVoteServer from "@/components/post-vote/PostVoteServer";
-import { buttonVariants } from "@/components/ui/Button";
-import { db } from "@/lib/db";
-import { redis } from "@/lib/redis";
-import { formatTimeToNow } from "@/lib/utils";
-import { CachedPost } from "@/types/redis";
-import { Post, User, Vote } from "@prisma/client";
-import { ArrowBigDown, ArrowBigUp, Loader2 } from "lucide-react";
-import { notFound } from "next/navigation";
-import { FC, Suspense } from "react";
+import CommentsSection from "@/components/CommentsSection"
+import EditorOutput from "@/components/EditorOutput"
+import PostVoteServer from "@/components/post-vote/PostVoteServer"
+import { buttonVariants } from "@/components/ui/Button"
+import { db } from "@/lib/db"
+import { redis } from "@/lib/redis"
+import { formatTimeToNow } from "@/lib/utils"
+import { CachedPost } from "@/types/redis"
+import { Post, User, Vote } from "@prisma/client"
+import { ArrowBigDown, ArrowBigUp, Loader2 } from "lucide-react"
+import { notFound } from "next/navigation"
+import { Suspense } from "react"
 
 interface pageProps {
   params: {
-    postId: string;
-  };
+    postId: string
+  }
 }
 
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
+export const dynamic = "force-dynamic"
+export const fetchCache = "force-no-store"
 
 const page = async ({ params }: pageProps) => {
   const cachedPost = (await redis.hgetall(
     `post:${params.postId}`
-  )) as CachedPost;
+  )) as CachedPost
 
-  let post: (Post & { votes: Vote[]; author: User }) | null = null;
+  let post: (Post & { votes: Vote[]; author: User }) | null = null
 
   if (!cachedPost) {
     post = await db.post.findFirst({
@@ -36,17 +36,20 @@ const page = async ({ params }: pageProps) => {
         votes: true,
         author: true,
       },
-    });
+    })
   }
-  if (!post && !cachedPost) return notFound();
+  if (!post && !cachedPost) return notFound()
+
+  const currentPost = post ?? cachedPost
 
   return (
     <div>
       <div className="h-full flex flex-col sm:flex-row items-center sm:items-start justify-between">
+        {/* Wrap PostVoteServer in Suspense */}
         <Suspense fallback={<PostVoteShell />}>
           {/* @ts-expect-error server component */}
           <PostVoteServer
-            postId={post?.id ?? cachedPost.id}
+            postId={currentPost.id}
             getData={async () => {
               return await db.post.findUnique({
                 where: {
@@ -55,7 +58,7 @@ const page = async ({ params }: pageProps) => {
                 include: {
                   votes: true,
                 },
-              });
+              })
             }}
           />
         </Suspense>
@@ -63,28 +66,27 @@ const page = async ({ params }: pageProps) => {
         <div className="sm:w-0 w-full flex-1 bg-white p-4 rounded-sm">
           <p className="max-h-40 mt-1 truncate text-xs text-gray-500">
             Posted by {post?.author.username ?? cachedPost.authorUsername}{" "}
-            {formatTimeToNow(
-              new Date(post?.createdAt ?? cachedPost.createdAt)
-            )}
+            {formatTimeToNow(new Date(currentPost.createdAt))}
           </p>
           <h1 className="text-xl font-semibold py-2 leading-6 text-gray-900">
-            {post?.title ?? cachedPost.title}
+            {currentPost.title}
           </h1>
 
-          <EditorOutput content={post?.content ?? cachedPost.content} />
+          <EditorOutput content={currentPost.content} />
           <Suspense
             fallback={
               <Loader2 className="h-5 w-5 animate-spin text-zinc-500" />
             }
           >
             {/* @ts-expect-error Server Component*/}
-            <CommentsSection postId={post?.id ?? cachedPost.id} />
+            <CommentsSection postId={currentPost.id} />
           </Suspense>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
+
 function PostVoteShell() {
   return (
     <div className="flex items-center flex-col pr-6 w-20">
@@ -103,6 +105,6 @@ function PostVoteShell() {
         <ArrowBigDown className="h-5 w-5 text-zinc-700" />
       </div>
     </div>
-  );
+  )
 }
-export default page;
+export default page
