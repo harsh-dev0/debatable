@@ -8,7 +8,6 @@ import { useMutation } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
 import { CreateSubdebatablePayload } from "@/lib/validators/subdebatable"
 import { toast } from "@/hooks/use-toast"
-import { Description } from "@radix-ui/react-toast"
 import { useCustomToast } from "@/hooks/use-custom-toast"
 
 const Page = () => {
