@@ -7,29 +7,36 @@ import { buttonVariants } from "./ui/Button"
 const ToFeedButton = () => {
   const pathname = usePathname()
 
-  // if path is /r/mycom, turn into /
-  // if path is /r/mycom/post/cligad6jf0003uhest4qqkeco, turn into /r/mycom
-
-  const subredditPath = getSubredditPath(pathname)
+  // Get the correct path to navigate based on current pathname
+  const subdebatablePath = getSubdebatablePath(pathname)
 
   return (
     <a
-      href={subredditPath}
+      href={subdebatablePath}
       className={buttonVariants({ variant: "ghost" })}
     >
       <ChevronLeft className="h-4 w-4 mr-1" />
-      {subredditPath === "/" ? "Back home" : "Back to community"}
+      {subdebatablePath === "/" ? "Back home" : "Back to community"}
     </a>
   )
 }
 
-const getSubredditPath = (pathname: string) => {
+const getSubdebatablePath = (pathname: string) => {
   const splitPath = pathname.split("/")
+  console.log(splitPath)
 
-  if (splitPath.length === 3) return "/"
-  else if (splitPath.length > 3) return `/${splitPath[1]}/${splitPath[2]}`
-  // default path, in case pathname does not match expected format
-  else return "/"
+  // Case 1: Check for community page like /mycom
+  if (splitPath.length === 2) {
+    return "/" // Go back home
+
+    // Case 2: Check for post page like /mycom/post/[postId]
+  } else if (splitPath.length > 2 && splitPath[2] === "post") {
+    return `/${splitPath[1]}` // Go to /mycom (community page)
+
+    // Default case: if format doesn't match expected
+  } else {
+    return "/"
+  }
 }
 
 export default ToFeedButton
