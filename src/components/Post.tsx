@@ -161,7 +161,7 @@ const Post: FC<PostProps> = ({
                         </button>
                       </li>
                     )}
-                    {isAuthor && (
+                    {/* {isAuthor && (
                       <li>
                         <button
                           onClick={() =>
@@ -174,7 +174,7 @@ const Post: FC<PostProps> = ({
                           Edit
                         </button>
                       </li>
-                    )}
+                    )} */}
                   </ul>
                 </div>
               )}
