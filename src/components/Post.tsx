@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/Alert-dialog"
 import { useToast } from "@/hooks/use-toast"
 import { useOnClickOutside } from "@/hooks/use-on-click-outside" // Import your custom hook
+import { usePathname } from "next/navigation"
 
 type PartialVote = Pick<Vote, "type">
 
@@ -46,6 +47,7 @@ const Post: FC<PostProps> = ({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const { toast } = useToast()
+  const pathname = usePathname()
 
   const isAuthor = currentUserId === post.authorId
 
@@ -76,11 +78,9 @@ const Post: FC<PostProps> = ({
         description: "Post has been deleted",
         duration: 3000, // Show for 3 seconds
       })
-
+      const subdebatablePath = getSubdebatablePath(pathname)
       // Redirect after deletion
-      window.location.href = subdebatableName.startsWith("/")
-        ? subdebatableName
-        : `/${subdebatableName}`
+      window.location.href = subdebatablePath
     } catch (error) {
       // Show "Error" message if deletion fails
       toast({
@@ -240,3 +240,20 @@ const Post: FC<PostProps> = ({
 }
 
 export default Post
+
+const getSubdebatablePath = (pathname: string) => {
+  const splitPath = pathname.split("/")
+
+  // Case 1: Check for community page like /mycom
+  if (splitPath.length === 1) {
+    return "/" // Go back home
+
+    // Case 2: Check for post page like /mycom/post/[postId]
+  } else if (splitPath.length > 1) {
+    return `/${splitPath[1]}` // Go to /mycom (community page)
+
+    // Default case: if format doesn't match expected
+  } else {
+    return "/"
+  }
+}
