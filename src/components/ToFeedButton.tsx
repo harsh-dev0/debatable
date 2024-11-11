@@ -23,7 +23,6 @@ const ToFeedButton = () => {
 
 const getSubdebatablePath = (pathname: string) => {
   const splitPath = pathname.split("/")
-  console.log(splitPath)
 
   // Case 1: Check for community page like /mycom
   if (splitPath.length === 2) {

@@ -36,7 +36,6 @@ const PostFeed: FC<PostFeedProps> = ({
       const { data } = await axios.get(query)
       return data as ExtendedPost[]
     },
-
     {
       getNextPageParam: (_, pages) => {
         return pages.length + 1
@@ -44,11 +43,13 @@ const PostFeed: FC<PostFeedProps> = ({
       initialData: { pages: [initialPosts], pageParams: [1] },
     }
   )
+
   useEffect(() => {
     if (entry?.isIntersecting) {
       fetchNextPage()
     }
   }, [entry, fetchNextPage])
+
   const posts = data?.pages.flatMap((page) => page) ?? initialPosts
 
   return (
@@ -63,31 +64,24 @@ const PostFeed: FC<PostFeedProps> = ({
         const currentVote = post.votes.find(
           (vote) => vote.userId === session?.user.id
         )
-        if (index === posts.length - 1) {
-          return (
-            <li key={post.id} ref={ref}>
-              <Post
-                post={post}
-                commentAmt={post.comments.length}
-                subdebatableName={post.subdebatable.name}
-                votesAmt={votesAmt}
-                currentVote={currentVote}
-              />
-            </li>
-          )
-        } else {
-          return (
+
+        return (
+          <li
+            key={post.id}
+            ref={index === posts.length - 1 ? ref : undefined}
+          >
             <Post
-              key={post.id}
               post={post}
               commentAmt={post.comments.length}
               subdebatableName={post.subdebatable.name}
               votesAmt={votesAmt}
               currentVote={currentVote}
+              currentUserId={session?.user?.id}
             />
-          )
-        }
+          </li>
+        )
       })}
+
       {isFetchingNextPage && (
         <li className="flex justify-center">
           <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
