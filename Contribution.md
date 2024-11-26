@@ -55,6 +55,6 @@ We’re committed to maintaining an inclusive and collaborative environment. Ple
 
 ## Thank You!
 
-Your contributions make **Debatable** better for everyone. We’re excited to see what you’ll bring to the table!
+Your contributions make **Debatable** better for everyone. We're excited to see what you'll bring to the table to help develop this project!
 
 ---
