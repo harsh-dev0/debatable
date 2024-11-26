@@ -33,7 +33,7 @@
 
 ---
 
-## 🗓️ Next Steps
+<!-- ## 🗓️ Next Steps
 
 ### Features in Progress
 
@@ -54,7 +54,7 @@
 - [ ] **Flash Debate Mode**:
   - Enable a 30-second timer for users to write and submit their opinions, adding an exciting, fast-paced dynamic.
 
----
+--- -->
 
 ## 📜 License
 
