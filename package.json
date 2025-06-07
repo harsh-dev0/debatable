@@ -72,7 +72,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/editorjs__header": "^2.6.0",
+    "@types/editorjs__header": "^2.8.2",
     "@types/lodash.debounce": "^4.0.7"
   }
 }

@@ -368,7 +368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@editorjs/header@npm:^2.7.0":
+"@editorjs/header@npm:*, @editorjs/header@npm:^2.7.0":
   version: 2.8.8
   resolution: "@editorjs/header@npm:2.8.8"
   dependencies:
@@ -1747,10 +1747,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/editorjs__header@npm:^2.6.0":
-  version: 2.6.3
-  resolution: "@types/editorjs__header@npm:2.6.3"
-  checksum: 10c0/9ddf00da1245b28f53418438abbfd48417ec781f554ae16bc243ce2083582b8ae1d91b16df91c1b06136f81563675e7d2d85172b1bbb564a7a4c694bd7ec145a
+"@types/editorjs__header@npm:^2.8.2":
+  version: 2.8.2
+  resolution: "@types/editorjs__header@npm:2.8.2"
+  dependencies:
+    "@editorjs/header": "npm:*"
+  checksum: 10c0/6407c09effef9cdfee838ae455ed16b021018f8fb58aa1fbdcef8ee2c8b3dc725fd8cfb9c4429222de46ab6888de50309830e8aae75ad76738c0da8b736437e1
   languageName: node
   linkType: hard
 
@@ -2814,7 +2816,7 @@ __metadata:
     "@tailwindcss/forms": "npm:^0.5.3"
     "@tailwindcss/typography": "npm:^0.5.9"
     "@tanstack/react-query": "npm:^4.29.11"
-    "@types/editorjs__header": "npm:^2.6.0"
+    "@types/editorjs__header": "npm:^2.8.2"
     "@types/lodash.debounce": "npm:^4.0.7"
     "@types/node": "npm:20.2.5"
     "@types/react": "npm:18.2.7"
