@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@editorjs/code": "^2.8.0",
-    "@editorjs/editorjs": "^2.27.0",
     "@editorjs/embed": "^2.5.3",
     "@editorjs/header": "^2.7.0",
     "@editorjs/image": "^2.8.1",
@@ -72,7 +71,6 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/editorjs__header": "^2.8.2",
     "@types/lodash.debounce": "^4.0.7"
   }
 }
